@@ -20,7 +20,12 @@ internal class GeneratePluginXMLTask: ProjectTools.ProjectTask() {
     }
 
     private fun generatePluginXML(project: Project) {
-        var pluginXMLContents = FileService.read("${project.projectDir}/extras/plugin.stub")
+        val pluginStubFile = File("${project.projectDir}/extras/plugin.stub")
+
+        if (!pluginStubFile.exists())
+            return
+
+        var pluginXMLContents = FileService.read(pluginStubFile.path)
         val pluginTitle = Parser.unescapeEntities(ProjectTools.prop(project, "pluginTitle"), false)
         val pluginInspections = InspectionService.getInspection(project)
 
