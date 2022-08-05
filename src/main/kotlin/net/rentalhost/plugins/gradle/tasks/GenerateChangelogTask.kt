@@ -28,7 +28,13 @@ internal class GenerateChangelogTask: ProjectTools.ProjectTask() {
                               "and this project adheres to [**Semantic Versioning**](https://semver.org/spec/v2.0.0.html).\n\n"
 
         val commits = GitService.getCommits(project.projectDir).toMutableList()
-        commits.addAll(ChangelogService.getExtraCommits(FileService.read("${project.projectDir}/extras/changelog.extras")))
+
+        val extrasFile = File("${project.projectDir}/extras/changelog.extras")
+
+        if (extrasFile.exists()) {
+            commits.addAll(ChangelogService.getExtraCommits(FileService.read(extrasFile.path)))
+        }
+
         commits.sortByDescending { it.versionInt(project) }
 
         commits.groupBy { it.getTag(project) }.forEach {
