@@ -74,8 +74,8 @@ object GitService {
         private fun getClassReferenceDashed(): String =
             StringService.dashCase(classReference)
 
-        fun getClassReferenceUrl(): String =
-            "https://github.com/hammer-tools/php-hammer/wiki/Inspections#user-content-${getClassReferenceDashed()}"
+        fun getClassReferenceUrl(pluginName: String): String =
+            "https://github.com/hammer-tools/${pluginName}/wiki/Inspections#user-content-${getClassReferenceDashed()}"
 
         fun getMessagePrintable(): String =
             if (classReference == "") "$message;"

@@ -35,6 +35,8 @@ internal class GenerateChangelogTask: ProjectTools.ProjectTask() {
             commits.addAll(ChangelogService.getExtraCommits(FileService.read(extrasFile.path)))
         }
 
+        val pluginName = ProjectTools.prop(project, "pluginName")
+
         commits.sortByDescending { it.versionInt(project) }
 
         commits.groupBy { it.getTag(project) }.forEach {
@@ -68,14 +70,14 @@ internal class GenerateChangelogTask: ProjectTools.ProjectTask() {
                 val urlReferences = mutableMapOf<String, String>()
 
                 if (it.key != "") {
-                    urlReferences[it.key] = "https://github.com/hammer-tools/php-hammer/releases/tag/${it.key}"
+                    urlReferences[it.key] = "https://github.com/hammer-tools/${pluginName}/releases/tag/${it.key}"
                 }
 
                 with(first()) {
                     changelogResult += "## ${getTagDescription(project)}\n\n"
 
                     with(getTag(project)) {
-                        urlReferences[this] = "https://github.com/hammer-tools/php-hammer/releases/tag/$this"
+                        urlReferences[this] = "https://github.com/hammer-tools/${pluginName}/releases/tag/$this"
                     }
                 }
 
@@ -90,14 +92,14 @@ internal class GenerateChangelogTask: ProjectTools.ProjectTask() {
                         .sortedByDescending { it.isRecentlyImplemented() }
                         .also {
                             it.filter { it.classReference != "" }
-                                .forEach { urlReferences[it.classReference] = it.getClassReferenceUrl() }
+                                .forEach { urlReferences[it.classReference] = it.getClassReferenceUrl(pluginName) }
                         }
                         .sortedBy { it.classReference != "" }
                         .forEach {
                             changelogResult += "- ${it.getMessagePrintable()}\n"
 
                             GitService.parseVersions(it.message).forEach {
-                                urlReferences[it] = "https://github.com/hammer-tools/php-hammer/releases/tag/$it"
+                                urlReferences[it] = "https://github.com/hammer-tools/${pluginName}/releases/tag/$it"
                             }
                         }
 
