@@ -26,7 +26,8 @@ internal class GeneratePluginXMLTask: ProjectTools.ProjectTask() {
             return
 
         var pluginXMLContents = FileService.read(pluginStubFile.path)
-        val pluginTitle = Parser.unescapeEntities(ProjectTools.prop(project, "pluginTitle"), false)
+        val pluginTitle = ProjectTools.prop(project, "pluginTitle")
+        val pluginTitleFull = Parser.unescapeEntities(ProjectTools.prop(project, "pluginTitleFull"), false)
         val pluginInspections = InspectionService.getInspection(project)
 
         for (copyProperty in copyProperties) {
@@ -52,7 +53,7 @@ internal class GeneratePluginXMLTask: ProjectTools.ProjectTask() {
                         .sortedBy { it.displayName }
                         .forEach {
                             response += ("<localInspection language=\"PHP\"\n" +
-                                         "                 groupPath=\"PHP,$pluginTitle\"\n" +
+                                         "                 groupPath=\"PHP,$pluginTitleFull\"\n" +
                                          "                 groupName=\"${it.groupName}\"\n" +
                                          "                 enabledByDefault=\"true\"\n" +
                                          "                 displayName=\"${it.displayName}\"\n" +
