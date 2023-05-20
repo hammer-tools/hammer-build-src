@@ -3,7 +3,7 @@ plugins {
 }
 
 dependencies {
-    implementation("org.jsoup:jsoup:1.15.3")
+    implementation("org.jsoup:jsoup:1.16.1")
 }
 
 repositories {
